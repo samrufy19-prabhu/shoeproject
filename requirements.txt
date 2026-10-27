@@ -1,0 +1,9 @@
+# StepUp E-Commerce Dependencies
+Django>=5.0,<=6.1.2
+gunicorn>=21.2.0
+whitenoise>=6.6.0
+razorpay>=2.0.1
+pillow>=10.0.0
+requests>=2.31.0
+sqlparse>=0.5.0
+asgiref>=3.8.0

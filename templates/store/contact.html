@@ -1,0 +1,114 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}Contact StepUp Footwear | We're Here to Help{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 36px auto 60px;">
+  <!-- Breadcrumb -->
+  <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
+    <a href="{% url 'home' %}" style="color: var(--primary);">Home</a> &gt;
+    <span style="color: var(--text-dark); font-weight: 600;">Contact Us</span>
+  </div>
+
+  <div class="section-title-wrap" style="text-align: left; margin-bottom: 32px;">
+    <span style="display:inline-block; background: #FFA0A0; color: #2F4F4F; font-size: 0.78rem; font-weight: 700; padding: 4px 14px; border-radius: 999px; margin-bottom: 12px; text-transform: uppercase;">
+      Reach Out to StepUp
+    </span>
+    <h1 style="font-size: 2.6rem; color: var(--primary); margin-bottom: 8px;">We'd Love to Hear From You</h1>
+    <p style="color: var(--text-muted); font-size: 1rem;">
+      Whether you need sizing advice, order tracking, or bespoke inquiries, our footwear concierges are ready to assist.
+    </p>
+  </div>
+
+  <div class="contact-layout">
+    <!-- Contact Form -->
+    <div class="contact-form-card">
+      <h3 style="font-size: 1.4rem; color: var(--primary); margin-bottom: 24px;">Send Us a Message</h3>
+
+      <form action="{% url 'contact' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-grid font-sans">
+          <div class="form-group">
+            <label class="form-label" for="contact_name">Your Name *</label>
+            <input type="text" id="contact_name" name="name" required class="form-control" placeholder="e.g. Priya Sharma">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contact_email">Email Address *</label>
+            <input type="email" id="contact_email" name="email" required class="form-control" placeholder="priya@example.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contact_phone">Phone Number</label>
+            <input type="tel" id="contact_phone" name="phone" class="form-control" placeholder="+91 98765 43210">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contact_subject">Subject</label>
+            <input type="text" id="contact_subject" name="subject" class="form-control" placeholder="Sizing Question / Order Status">
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="contact_message">Your Message *</label>
+            <textarea id="contact_message" name="message" rows="5" required class="form-control" placeholder="How can our shoemakers help you today?"></textarea>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <button type="submit" class="btn-primary" style="padding: 14px 32px; font-size: 1rem;">
+            <i class="fa-regular fa-paper-plane"></i>
+            <span>Send Message</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Contact Info Card -->
+    <div class="contact-info-card">
+      <div>
+        <h3>Get in Touch Directly</h3>
+        <p style="font-size: 0.92rem; color: rgba(255,255,255,0.85); margin-bottom: 28px; line-height: 1.6;">
+          Our customer happiness team responds within 2 business hours. Visit our flagship studio for a customized foot-measurement session.
+        </p>
+
+        <div class="contact-detail-row font-sans">
+          <i class="fa-solid fa-location-dot contact-icon"></i>
+          <div>
+            <strong style="display: block; color: #FFF; font-size: 0.95rem;">Flagship Experience Center</strong>
+            <span style="color: rgba(255,255,255,0.8); font-size: 0.88rem;">StepUp Studio, 108 Heritage Boulevard, 100ft Road, Indiranagar, Bengaluru - 560038</span>
+          </div>
+        </div>
+
+        <div class="contact-detail-row font-sans">
+          <i class="fa-solid fa-phone contact-icon"></i>
+          <div>
+            <strong style="display: block; color: #FFF; font-size: 0.95rem;">Support Hotline</strong>
+            <span style="color: rgba(255,255,255,0.8); font-size: 0.88rem;">+91 (800) 123-4567 / +91 98765 43210</span>
+          </div>
+        </div>
+
+        <div class="contact-detail-row font-sans">
+          <i class="fa-solid fa-envelope contact-icon"></i>
+          <div>
+            <strong style="display: block; color: #FFF; font-size: 0.95rem;">Customer Care Email</strong>
+            <span style="color: rgba(255,255,255,0.8); font-size: 0.88rem;">support@stepupfootwear.com</span>
+          </div>
+        </div>
+
+        <div class="contact-detail-row font-sans">
+          <i class="fa-solid fa-clock contact-icon"></i>
+          <div>
+            <strong style="display: block; color: #FFF; font-size: 0.95rem;">Studio Hours</strong>
+            <span style="color: rgba(255,255,255,0.8); font-size: 0.88rem;">Monday - Saturday: 9:30 AM to 8:30 PM (IST)</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(0,0,0,0.25); padding: 18px; border-radius: var(--radius-md); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.84rem; color: #FFA0A0;">
+        <i class="fa-solid fa-bolt"></i> Need quick size advice? Mention your typical athletic shoe size and our master shoemaker will match your exact last.
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

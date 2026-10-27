@@ -1,0 +1,103 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}About StepUp | Our Story & Craftsmanship{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 36px auto 60px;">
+  <!-- Breadcrumb -->
+  <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
+    <a href="{% url 'home' %}" style="color: var(--primary);">Home</a> &gt;
+    <span style="color: var(--text-dark); font-weight: 600;">About Us</span>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="about-hero-grid">
+    <div>
+      <span style="display:inline-block; background: #FFA0A0; color: #2F4F4F; font-size: 0.78rem; font-weight: 700; padding: 4px 14px; border-radius: 999px; margin-bottom: 16px; text-transform: uppercase;">
+        Crafted with Passion Since 2018
+      </span>
+      <h1 style="font-size: 2.8rem; color: var(--primary); margin-bottom: 20px; line-height: 1.2;">
+        Step into Comfort & Uncompromising Elegance
+      </h1>
+      <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 20px;">
+        At <strong>StepUp</strong>, we believe every journey begins from the ground up. Founded with a mission to bring together old-world shoemaking traditions and modern podiatric ergonomics, we craft footwear that empowers you with confidence through every stride.
+      </p>
+      <p style="color: var(--text-muted); font-size: 0.98rem; line-height: 1.8; margin-bottom: 30px;">
+        From supple hand-burnished leathers to breathable cloud-soft cushioned insoles, every detail is engineered to deliver a bespoke fit that looks exceptional and feels effortless.
+      </p>
+      <div style="display: flex; gap: 16px;">
+        <a href="{% url 'category' 'men' %}" class="btn-primary">
+          <span>Explore Collections</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="{% url 'contact' %}" class="btn-accent" style="background: transparent; color: var(--primary); border-color: var(--primary);">
+          <span>Get in Touch</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Visual Showcase Cluster -->
+    <div class="about-img-cluster">
+      <img src="{% static 'images/IMG_20250601_182321_982.jpg' %}" alt="StepUp Shoe Artistry" class="about-main-img">
+      <img src="{% static 'images/IMG_20250601_181700_867.jpg' %}" alt="StepUp Kids Shoe Collection" class="about-badge-circle">
+    </div>
+  </div>
+
+  <!-- Stats Counter Bar -->
+  <div style="background: var(--primary); color: #FFF; border-radius: var(--radius-lg); padding: 40px; margin: 60px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; text-align: center; box-shadow: var(--shadow-lg);">
+    <div>
+      <div style="font-size: 3rem; font-weight: 700; color: #FFA0A0; font-family: 'Plus Jakarta Sans', sans-serif;">50,000+</div>
+      <div style="font-size: 1rem; color: rgba(255,255,255,0.85); margin-top: 4px;">Delighted Footwear Enthusiasts</div>
+    </div>
+    <div style="border-left: 1px solid rgba(255,255,255,0.2); border-right: 1px solid rgba(255,255,255,0.2);">
+      <div style="font-size: 3rem; font-weight: 700; color: #FFA0A0; font-family: 'Plus Jakarta Sans', sans-serif;">150+</div>
+      <div style="font-size: 1rem; color: rgba(255,255,255,0.85); margin-top: 4px;">Artisan Master Shoemakers</div>
+    </div>
+    <div>
+      <div style="font-size: 3rem; font-weight: 700; color: #FFA0A0; font-family: 'Plus Jakarta Sans', sans-serif;">4.8 / 5.0</div>
+      <div style="font-size: 1rem; color: rgba(255,255,255,0.85); margin-top: 4px;">Verified Customer Rating</div>
+    </div>
+  </div>
+
+  <!-- Values Section -->
+  <div style="margin-bottom: 60px;">
+    <div class="section-title-wrap">
+      <h2 class="section-title">The StepUp Hallmark</h2>
+      <p class="section-subtitle">What sets our footwear apart in every stitch and sole.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;">
+      <div style="background: #FFF; padding: 36px 28px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); text-align: center;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(255,160,160,0.25); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.6rem;">
+          <i class="fa-solid fa-gem"></i>
+        </div>
+        <h3 style="font-size: 1.3rem; margin-bottom: 12px; color: var(--primary);">Master Craftsmanship</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; font-family: 'Plus Jakarta Sans', sans-serif;">
+          Each silhouette is hand-lasted and bench-crafted using premium full-grain leathers and hand-stitched welt construction that outlasts fast fashion.
+        </p>
+      </div>
+
+      <div style="background: #FFF; padding: 36px 28px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); text-align: center;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(255,160,160,0.25); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.6rem;">
+          <i class="fa-solid fa-feather-pointed"></i>
+        </div>
+        <h3 style="font-size: 1.3rem; margin-bottom: 12px; color: var(--primary);">Cloud-Like Comfort</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; font-family: 'Plus Jakarta Sans', sans-serif;">
+          Orthopedically sculpted arch beds and high-density memory foam footbeds reduce impact on your joints with every step you take.
+        </p>
+      </div>
+
+      <div style="background: #FFF; padding: 36px 28px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); text-align: center;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(255,160,160,0.25); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 1.6rem;">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <h3 style="font-size: 1.3rem; margin-bottom: 12px; color: var(--primary);">Eco-Conscious Promise</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; font-family: 'Plus Jakarta Sans', sans-serif;">
+          Vegetable-tanned leathers, non-toxic water-based adhesives, and recycled packaging reflect our dedication to a greener planet.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

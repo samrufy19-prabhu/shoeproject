@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}StepUp | Premium Footwear Collection{% endblock %}</title>
+
+  <!-- Google Font: Libre Baskerville -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    <div class="container">
+      <span>🔥 FESTIVE SALE:</span> Free Express Shipping on orders over ₹999 | Use Code <span>STEPUP50</span> for 50% Off
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="site-header">
+    <div class="container navbar">
+      <!-- Brand Logo & Name -->
+      <a href="{% url 'home' %}" class="navbar-brand">
+        <img src="{% static 'images/IMG_20250530_190436_075.jpg' %}" alt="StepUp Footwear" class="brand-logo-img">
+        <span class="brand-title">Step<span>Up</span></span>
+      </a>
+
+      <!-- Search Bar -->
+      <form action="{% url 'category' 'men' %}" method="GET" class="navbar-search">
+        <input type="text" name="q" placeholder="Search shoes, sneakers, boots..." class="search-input" value="{{ query|default:'' }}">
+        <button type="submit" class="search-btn" aria-label="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </form>
+
+      <!-- Navigation Links -->
+      <ul class="navbar-nav">
+        <li><a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+        <li><a href="{% url 'category' 'men' %}" class="nav-link {% if category.slug == 'men' %}active{% endif %}">Men</a></li>
+        <li><a href="{% url 'category' 'women' %}" class="nav-link {% if category.slug == 'women' %}active{% endif %}">Women</a></li>
+        <li><a href="{% url 'category' 'kids' %}" class="nav-link {% if category.slug == 'kids' %}active{% endif %}">Kids</a></li>
+        <li><a href="{% url 'about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About Us</a></li>
+        <li><a href="{% url 'contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact Us</a></li>
+      </ul>
+
+      <!-- Action Buttons (User Login & Cart) -->
+      <div class="navbar-actions">
+        {% if user.is_authenticated %}
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.88rem; color:#FFA0A0; font-family:'Plus Jakarta Sans',sans-serif;">Hi, {{ user.username }}</span>
+            <a href="{% url 'logout' %}" class="nav-action-btn" title="Logout">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </a>
+          </div>
+        {% else %}
+          <a href="{% url 'login' %}" class="nav-action-btn {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
+            <i class="fa-regular fa-user"></i>
+            <span>Log In</span>
+          </a>
+        {% endif %}
+
+        <!-- Cart Icon with Live Badge -->
+        <a href="{% url 'cart' %}" class="nav-action-btn cart-icon-wrap" title="View Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span>Cart</span>
+          <span class="cart-badge">{{ cart_total_items }}</span>
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-toggle" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Flash Messages & Toasts -->
+  <div class="container" style="margin-top: 16px;">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-toast alert-{{ message.tags }}">
+          <span>{{ message }}</span>
+          <button style="background:none;border:none;cursor:pointer;font-weight:bold;" onclick="this.parentElement.remove()">✕</button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Main Content Block -->
+  <main style="flex: 1;">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Info -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+            <img src="{% static 'images/IMG_20250530_190436_075.jpg' %}" alt="StepUp" style="width: 38px; height: 38px; border-radius: 50%; background: #FFF; padding: 2px;">
+            <span style="font-size: 1.4rem; font-weight: 700; color: #FFF;">Step<span style="color: #FFA0A0;">Up</span></span>
+          </div>
+          <p class="footer-desc">
+            Crafting exquisite footwear where timeless elegance meets modern comfort. Every pair is shaped by master shoemakers using the finest materials.
+          </p>
+          <div style="display: flex; gap: 12px; color: #FFA0A0; font-size: 1.1rem;">
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Navigation -->
+        <div>
+          <h4 class="footer-title">Explore</h4>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'category' 'men' %}">Men's Footwear</a></li>
+            <li><a href="{% url 'category' 'women' %}">Women's Collection</a></li>
+            <li><a href="{% url 'category' 'kids' %}">Kids' Play Shoes</a></li>
+            <li><a href="{% url 'about' %}">About StepUp</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Customer Service -->
+        <div>
+          <h4 class="footer-title">Customer Care</h4>
+          <ul class="footer-links">
+            <li><a href="{% url 'cart' %}">Shopping Cart</a></li>
+            <li><a href="{% url 'checkout' %}">Checkout</a></li>
+            <li><a href="{% url 'contact' %}">Shipping & Delivery</a></li>
+            <li><a href="{% url 'contact' %}">Return & Exchange Policy</a></li>
+            <li><a href="{% url 'contact' %}">Size Guide & Fit</a></li>
+            <li><a href="{% url 'login' %}">Account Login</a></li>
+          </ul>
+        </div>
+
+        <!-- Newsletter & Payment Options -->
+        <div>
+          <h4 class="footer-title">Newsletter</h4>
+          <p class="footer-desc">Subscribe to unlock VIP early access to secret shoe drops & exclusive 50% discount coupons.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to StepUp VIP drops!');">
+            <input type="email" placeholder="Your email address..." class="newsletter-input" required>
+            <button type="submit" class="newsletter-btn">Subscribe</button>
+          </form>
+
+          <p style="font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 14px;">100% Secure Checkout with:</p>
+          <div class="payment-icons-row">
+            <div class="payment-logo-badge" title="Visa"><img src="{% static 'images/image (1).png' %}" alt="Visa"></div>
+            <div class="payment-logo-badge" title="Mastercard"><img src="{% static 'images/image (45).png' %}" alt="Mastercard"></div>
+            <div class="payment-logo-badge" title="RuPay"><img src="{% static 'images/image (44).png' %}" alt="RuPay"></div>
+            <div class="payment-logo-badge" title="PayPal"><img src="{% static 'images/image (47).png' %}" alt="PayPal"></div>
+            <div class="payment-logo-badge" title="Klarna"><img src="{% static 'images/image (49).png' %}" alt="Klarna"></div>
+            <div class="payment-logo-badge" title="Clearpay"><img src="{% static 'images/image (48).png' %}" alt="Clearpay"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div class="footer-bottom">
+        &copy; 2026 StepUp Footwear Inc. All rights reserved. Designed with Font: Libre Baskerville | Colors: #2F4F4F & #FFA0A0.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

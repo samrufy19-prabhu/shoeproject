@@ -1,0 +1,177 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}Checkout | StepUp{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 36px auto 60px;">
+  <!-- Breadcrumb -->
+  <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
+    <a href="{% url 'home' %}" style="color: var(--primary);">Home</a> &gt;
+    <a href="{% url 'cart' %}" style="color: var(--primary);">Cart</a> &gt;
+    <span style="color: var(--text-dark); font-weight: 600;">Checkout</span>
+  </div>
+
+  <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 28px;">Complete Your Order</h1>
+
+  <div class="checkout-layout">
+    <!-- Shipping & Payment Form -->
+    <div class="checkout-form-card">
+      <form action="{% url 'checkout' %}" method="POST" id="checkout-form">
+        {% csrf_token %}
+
+        <h3 style="font-size: 1.3rem; color: var(--primary); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">
+          <i class="fa-solid fa-location-dot" style="color: var(--accent); margin-right: 8px;"></i>
+          Shipping Address
+        </h3>
+
+        <div class="form-grid font-sans">
+          <div class="form-group full-width">
+            <label class="form-label" for="full_name">Full Name *</label>
+            <input type="text" id="full_name" name="full_name" required class="form-control" placeholder="e.g. Rahul Sharma" value="{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required class="form-control" placeholder="rahul@example.com" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required class="form-control" placeholder="+91 98765 43210" value="+91 9876543210">
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="address">Street Address *</label>
+            <input type="text" id="address" name="address" required class="form-control" placeholder="Flat No., House/Building, Street, Area" value="42 Heritage Enclave, MG Road">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="city">City / Town *</label>
+            <input type="text" id="city" name="city" required class="form-control" placeholder="Bengaluru" value="Bengaluru">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="state">State *</label>
+            <input type="text" id="state" name="state" required class="form-control" placeholder="Karnataka" value="Karnataka">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="postal_code">Postal / PIN Code *</label>
+            <input type="text" id="postal_code" name="postal_code" required class="form-control" placeholder="560001" value="560001">
+          </div>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <h3 style="font-size: 1.3rem; color: var(--primary); margin: 32px 0 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">
+          <i class="fa-solid fa-credit-card" style="color: var(--accent); margin-right: 8px;"></i>
+          Payment Method
+        </h3>
+
+        <div class="font-sans">
+          <!-- Razorpay Option -->
+          <label class="payment-method-box selected" id="method-razorpay">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <input type="radio" name="payment_method" value="razorpay" checked id="radio-razorpay" style="accent-color: var(--primary);">
+              <div>
+                <strong style="color: var(--primary); font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                  Online Payment (Razorpay Test Mode)
+                  <span style="background: #D1FAE5; color: #065F46; font-size: 0.72rem; padding: 2px 8px; border-radius: 999px;">Recommended</span>
+                </strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">
+                  Pay securely with UPI, Credit/Debit Cards (Visa, Mastercard, RuPay), NetBanking, & Wallets.
+                </p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <img src="{% static 'images/image (1).png' %}" alt="Visa" style="height: 18px;">
+              <img src="{% static 'images/image (45).png' %}" alt="Mastercard" style="height: 18px;">
+              <img src="{% static 'images/image (44).png' %}" alt="RuPay" style="height: 18px;">
+            </div>
+          </label>
+
+          <!-- Cash On Delivery Option -->
+          <label class="payment-method-box" id="method-cod">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <input type="radio" name="payment_method" value="cod" id="radio-cod" style="accent-color: var(--primary);">
+              <div>
+                <strong style="color: var(--primary); font-size: 1rem;">Cash on Delivery (COD)</strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">
+                  Pay with cash or scan UPI upon doorstep delivery.
+                </p>
+              </div>
+            </div>
+            <i class="fa-solid fa-hand-holding-dollar" style="font-size: 1.4rem; color: var(--primary);"></i>
+          </label>
+        </div>
+
+        <div style="margin-top: 32px;">
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 15px; font-size: 1.05rem;">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Proceed to Test Payment (₹{{ cart.total|floatformat:0 }})</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Sidebar Order Summary (Figma Prototype Match) -->
+    <div>
+      <div class="checkout-summary-sidebar">
+        <h3>Order Summary</h3>
+
+        <!-- Items Preview -->
+        <div style="max-height: 280px; overflow-y: auto; margin-bottom: 20px; padding-right: 6px;">
+          {% for item in cart.items.all %}
+            <div class="checkout-item-preview">
+              <img src="{% static 'images/' %}{{ item.product.image }}" alt="{{ item.product.name }}" class="checkout-item-thumb">
+              <div style="flex: 1;">
+                <div style="font-size: 0.92rem; font-weight: 600; color: #FFF; line-height: 1.3;">{{ item.product.name }}</div>
+                <div style="font-size: 0.78rem; color: #FFA0A0; font-family: 'Plus Jakarta Sans', sans-serif;">Size: {{ item.size }} | Qty: {{ item.quantity }}</div>
+              </div>
+              <div class="font-sans" style="font-weight: 700; color: #FFF; font-size: 0.95rem;">
+                ₹{{ item.subtotal|floatformat:0 }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Cost Breakdown -->
+        <div class="font-sans" style="font-size: 0.92rem; color: rgba(255,255,255,0.85);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span>Subtotal:</span>
+            <strong>₹{{ cart.subtotal|floatformat:0 }}</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span>Express Shipping:</span>
+            <span style="color: #FFA0A0; font-weight: 600;">FREE</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+            <span>Estimated GST:</span>
+            <span>₹0</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 700; color: #FFF; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 16px;">
+            <span>Total Payable:</span>
+            <span style="color: #FFA0A0;">₹{{ cart.total|floatformat:0 }}</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px; padding: 14px; background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); font-size: 0.78rem; color: rgba(255,255,255,0.8); font-family: 'Plus Jakarta Sans', sans-serif;">
+          <i class="fa-solid fa-lock" style="color: #FFA0A0; margin-right: 6px;"></i>
+          Razorpay test mode enabled. No real charges will be deducted from your account.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      document.querySelectorAll('.payment-method-box').forEach(b => b.classList.remove('selected'));
+      this.closest('.payment-method-box').classList.add('selected');
+    });
+  });
+</script>
+{% endblock %}

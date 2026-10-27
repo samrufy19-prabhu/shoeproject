@@ -1,0 +1,254 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | StepUp{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 28px auto 60px;">
+  <!-- Breadcrumb -->
+  <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
+    <a href="{% url 'home' %}" style="color: var(--primary);">Home</a> &gt;
+    <a href="{% url 'category' product.category.slug %}" style="color: var(--primary);">{{ product.category.name }}</a> &gt;
+    <span style="color: var(--text-dark); font-weight: 600;">{{ product.name }}</span>
+  </div>
+
+  <!-- Product Detail Section -->
+  <div class="product-detail-layout">
+    <!-- Gallery Column -->
+    <div class="product-gallery-section">
+      <div class="gallery-thumbs-col">
+        <!-- Main Image as first thumbnail -->
+        <img src="{% static 'images/' %}{{ product.image }}" alt="{{ product.name }}" class="gallery-thumb active">
+        {% for g in gallery_images %}
+          <img src="{% static 'images/' %}{{ g.image }}" alt="{{ g.alt|default:product.name }}" class="gallery-thumb">
+        {% endfor %}
+      </div>
+
+      <div class="gallery-main-view">
+        <img src="{% static 'images/' %}{{ product.image }}" alt="{{ product.name }}" class="gallery-main-img">
+      </div>
+    </div>
+
+    <!-- Info & Purchase Column -->
+    <div class="detail-info-col">
+      <div>
+        <span style="display:inline-block; background: #FFA0A0; color: #2F4F4F; font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; margin-bottom: 12px; text-transform: uppercase;">
+          {{ product.category.name }}'s Collection
+        </span>
+
+        <h1 class="detail-title">{{ product.name }}</h1>
+
+        <!-- Rating & Reviews -->
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px; font-family: 'Plus Jakarta Sans', sans-serif;">
+          <div class="rating-stars" style="margin-bottom: 0;">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+          </div>
+          <span style="font-weight: 700; color: var(--primary);">{{ product.rating }}</span>
+          <span style="color: var(--text-muted); font-size: 0.88rem;">({{ product.reviews_count }} Verified Customer Reviews)</span>
+        </div>
+
+        <!-- Pricing -->
+        <div class="product-pricing font-sans" style="margin-bottom: 20px;">
+          <span class="price-current" style="font-size: 2rem;">₹{{ product.price|floatformat:0 }}</span>
+          {% if product.original_price %}
+            <span class="price-original" style="font-size: 1.2rem;">₹{{ product.original_price|floatformat:0 }}</span>
+            <span class="price-discount font-sans" style="font-size: 0.9rem; padding: 4px 10px;">{{ product.discount_percent }}% OFF</span>
+          {% endif %}
+        </div>
+
+        <!-- Description Snippet -->
+        <p style="color: var(--text-muted); font-size: 0.96rem; line-height: 1.7; margin-bottom: 24px;">
+          {{ product.description }}
+        </p>
+
+        <!-- Color Details -->
+        <div style="margin-bottom: 20px;">
+          <span style="font-size: 0.88rem; font-weight: 700; color: var(--primary);">Color: </span>
+          <span style="font-size: 0.88rem; color: var(--text-dark); font-weight: 600;">{{ product.color }}</span>
+        </div>
+
+        <!-- Add to Cart Form -->
+        <form action="{% url 'add_to_cart' product.id %}" method="POST" id="add-to-cart-form">
+          {% csrf_token %}
+          <input type="hidden" name="size" id="selected-size-input" value="{{ product.sizes_list.0 }}">
+
+          <!-- Size Selector -->
+          <div class="size-selector">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <span class="size-selector-label" style="margin-bottom:0;">Select Shoe Size (UK/India):</span>
+              <a href="javascript:void(0)" onclick="alert('Size Guide: Fits true to size. If between sizes, we recommend ordering one size up for boots and slip-ons.');" style="font-size:0.8rem; color:var(--primary); text-decoration:underline;">Size Guide</a>
+            </div>
+            <div class="size-options font-sans">
+              {% for s in product.sizes_list %}
+                <button type="button" class="size-btn {% if forloop.first %}active{% endif %}" data-size="{{ s }}">
+                  {{ s }}
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Quantity & Action Buttons -->
+          <div class="detail-actions">
+            <div class="qty-control font-sans">
+              <button type="button" class="qty-btn" id="qty-decrease">-</button>
+              <input type="text" name="quantity" id="qty-input" value="1" readonly class="qty-input">
+              <button type="button" class="qty-btn" id="qty-increase">+</button>
+            </div>
+
+            <button type="submit" class="btn-primary" style="flex: 1; justify-content: center; padding: 13px 24px;">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>Add to Cart</span>
+            </button>
+
+            <button type="submit" name="buy_now" value="1" class="btn-accent" style="flex: 1; justify-content: center; padding: 13px 24px;" onclick="document.getElementById('add-to-cart-form').action='{% url 'add_to_cart' product.id %}?next=checkout';">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Buy Now</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Perks list -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 18px; background: #F9FAFB; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.86rem; color: var(--text-dark);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-truck" style="color: var(--primary);"></i>
+            <span>Free Shipping on Orders > ₹999</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-shield-check" style="color: var(--primary);"></i>
+            <span>100% Genuine Handcrafted</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-rotate-left" style="color: var(--primary);"></i>
+            <span>30-Day Hassle-Free Exchange</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-credit-card" style="color: var(--primary);"></i>
+            <span>Razorpay Secure Test Payment</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Specifications & Reviews Tabs -->
+  <div style="background: #FFF; border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 36px; margin-bottom: 60px;">
+    <h3 style="font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 12px;">
+      Customer Ratings & Reviews
+    </h3>
+
+    <div style="display: grid; grid-template-columns: 280px 1fr; gap: 40px; align-items: center; margin-bottom: 36px; font-family: 'Plus Jakarta Sans', sans-serif;">
+      <!-- Overall Rating Box -->
+      <div style="text-align: center; background: #F8F9FA; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <div style="font-size: 3.5rem; font-weight: 700; color: var(--primary); line-height: 1;">{{ product.rating }}</div>
+        <div class="rating-stars" style="justify-content: center; font-size: 1.2rem; margin: 8px 0;">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star-half-stroke"></i>
+        </div>
+        <div style="font-size: 0.88rem; color: var(--text-muted);">Based on {{ product.reviews_count }} verified reviews</div>
+      </div>
+
+      <!-- Rating Breakdown Bars -->
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 0.85rem;">
+          <span style="width: 50px;">5 Star</span>
+          <div style="flex: 1; height: 10px; background: #E5E7EB; border-radius: 999px; overflow: hidden;">
+            <div style="width: 82%; height: 100%; background: #F59E0B;"></div>
+          </div>
+          <span style="width: 36px; text-align: right; color: var(--text-muted);">82%</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 0.85rem;">
+          <span style="width: 50px;">4 Star</span>
+          <div style="flex: 1; height: 10px; background: #E5E7EB; border-radius: 999px; overflow: hidden;">
+            <div style="width: 14%; height: 100%; background: #F59E0B;"></div>
+          </div>
+          <span style="width: 36px; text-align: right; color: var(--text-muted);">14%</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 0.85rem;">
+          <span style="width: 50px;">3 Star</span>
+          <div style="flex: 1; height: 10px; background: #E5E7EB; border-radius: 999px; overflow: hidden;">
+            <div style="width: 3%; height: 100%; background: #F59E0B;"></div>
+          </div>
+          <span style="width: 36px; text-align: right; color: var(--text-muted);">3%</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 0.85rem;">
+          <span style="width: 50px;">2 Star</span>
+          <div style="flex: 1; height: 10px; background: #E5E7EB; border-radius: 999px; overflow: hidden;">
+            <div style="width: 1%; height: 100%; background: #F59E0B;"></div>
+          </div>
+          <span style="width: 36px; text-align: right; color: var(--text-muted);">1%</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; font-size: 0.85rem;">
+          <span style="width: 50px;">1 Star</span>
+          <div style="flex: 1; height: 10px; background: #E5E7EB; border-radius: 999px; overflow: hidden;">
+            <div style="width: 0%; height: 100%; background: #F59E0B;"></div>
+          </div>
+          <span style="width: 36px; text-align: right; color: var(--text-muted);">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sample Reviews -->
+    <div style="border-top: 1px solid var(--border-color); padding-top: 24px;">
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <strong style="color: var(--primary);">Arjun Sharma</strong>
+          <span style="font-size: 0.82rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">Verified Purchase • 2 weeks ago</span>
+        </div>
+        <div class="rating-stars" style="margin-bottom: 6px;">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <p style="font-size: 0.92rem; color: var(--text-dark); line-height: 1.6;">
+          "Incredible comfort right out of the box! The leather feels rich and buttery smooth. I wore these to a weekend brunch and received compliments all day. Highly recommended!"
+        </p>
+      </div>
+
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <strong style="color: var(--primary);">Pooja Kulkarni</strong>
+          <span style="font-size: 0.82rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">Verified Purchase • 1 month ago</span>
+        </div>
+        <div class="rating-stars" style="margin-bottom: 6px;">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+        </div>
+        <p style="font-size: 0.92rem; color: var(--text-dark); line-height: 1.6;">
+          "The design and finishing are top-notch. Memory foam insole makes a huge difference. Seamless Razorpay payment and super prompt delivery."
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Shoes Section -->
+  {% if related_products %}
+    <div>
+      <div class="section-title-wrap" style="text-align: left; margin-bottom: 24px;">
+        <h3 style="font-size: 1.8rem; color: var(--primary);">You May Also Like</h3>
+      </div>
+      <div class="products-grid">
+        {% for rel in related_products %}
+          <div class="product-card">
+            <a href="{% url 'product_detail' rel.slug %}" class="product-img-wrap">
+              <img src="{% static 'images/' %}{{ rel.image }}" alt="{{ rel.name }}" class="product-img" loading="lazy">
+            </a>
+            <div class="product-info">
+              <div>
+                <span class="product-category-name">{{ rel.category.name }}</span>
+                <h4 class="product-title"><a href="{% url 'product_detail' rel.slug %}">{{ rel.name }}</a></h4>
+              </div>
+              <div class="product-pricing font-sans">
+                <span class="price-current">₹{{ rel.price|floatformat:0 }}</span>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

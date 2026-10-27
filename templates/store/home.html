@@ -1,0 +1,255 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}StepUp | Modern Elegance & Supreme Comfort{% endblock %}
+
+{% block content %}
+
+<!-- ==========================================================================
+     Hero Carousel (Sliding Images with Smooth Prototype Animations)
+     ========================================================================== -->
+<section class="hero-carousel-section">
+  <div class="carousel-container">
+    {% for banner in offer_banners %}
+      <div class="carousel-slide {% if forloop.first %}active{% endif %}">
+        <div class="slide-backdrop" style="background-image: url('{% static 'images/' %}{{ banner.image }}');"></div>
+        <div class="slide-overlay"></div>
+        <div class="container">
+          <div class="slide-content">
+            <span class="slide-tag"><i class="fa-solid fa-bolt"></i> {{ banner.tag }}</span>
+            <h1 class="slide-title">{{ banner.title }}</h1>
+            <p class="slide-subtitle">{{ banner.subtitle }}</p>
+            <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+              <a href="{{ banner.link }}" class="btn-accent">
+                <span>Shop This Collection</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+              <a href="{% url 'about' %}" class="btn-primary" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4);">
+                <span>Our Heritage</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <!-- Navigation Arrows -->
+    <button class="carousel-btn carousel-prev" aria-label="Previous Slide">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <button class="carousel-btn carousel-next" aria-label="Next Slide">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <!-- Carousel Indicator Dots -->
+    <div class="carousel-indicators">
+      {% for banner in offer_banners %}
+        <button class="indicator-dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}" aria-label="Slide {{ forloop.counter }}"></button>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Shop By Category (Carousel / Cards)
+     ========================================================================== -->
+<section class="container" style="margin-bottom: 60px;">
+  <div class="section-title-wrap">
+    <h2 class="section-title">Shop by Category</h2>
+    <p class="section-subtitle">Engineered for comfort, tailored for distinction. Choose your style.</p>
+  </div>
+
+  <div class="category-grid">
+    {% for cat in categories %}
+      <div class="category-card">
+        <a href="{% url 'category' cat.slug %}" class="category-card-img-wrap">
+          <img src="{% static 'images/' %}{{ cat.image }}" alt="{{ cat.name }} Footwear" class="category-card-img">
+          <div class="category-overlay">
+            <span style="background: #2F4F4F; color: #FFA0A0; padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.5px;">
+              EXPLORE COLLECTION &rarr;
+            </span>
+          </div>
+        </a>
+        <div class="category-card-body">
+          <div>
+            <h3 class="category-card-name">{{ cat.name }}'s Collection</h3>
+            <p class="category-card-desc">{{ cat.description }}</p>
+          </div>
+          <div>
+            <a href="{% url 'category' cat.slug %}" class="btn-primary" style="width: 100%; justify-content: center;">
+              <span>View {{ cat.name }}'s Shoes</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Featured & Trending Products Grid
+     ========================================================================== -->
+<section class="container" style="margin-bottom: 60px;">
+  <div class="section-title-wrap">
+    <h2 class="section-title">Featured Footwear</h2>
+    <p class="section-subtitle">Our top-rated styles handpicked by shoe lovers and stylists.</p>
+  </div>
+
+  <div class="products-grid">
+    {% for product in featured_products %}
+      <div class="product-card">
+        {% if product.offer_badge %}
+          <span class="product-badge">{{ product.offer_badge }}</span>
+        {% elif product.discount_percent > 0 %}
+          <span class="product-badge">{{ product.discount_percent }}% OFF</span>
+        {% endif %}
+
+        <a href="{% url 'product_detail' product.slug %}" class="product-img-wrap">
+          <img src="{% static 'images/' %}{{ product.image }}" alt="{{ product.name }}" class="product-img" loading="lazy">
+        </a>
+
+        <div class="product-info">
+          <div>
+            <span class="product-category-name">{{ product.category.name }}</span>
+            <h3 class="product-title">
+              <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+            </h3>
+
+            <!-- Rating Stars -->
+            <div class="rating-stars font-sans">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star-half-stroke"></i>
+              <span class="reviews-count">({{ product.reviews_count }})</span>
+            </div>
+          </div>
+
+          <div>
+            <!-- Pricing -->
+            <div class="product-pricing font-sans">
+              <span class="price-current">₹{{ product.price|floatformat:0 }}</span>
+              {% if product.original_price %}
+                <span class="price-original">₹{{ product.original_price|floatformat:0 }}</span>
+                <span class="price-discount font-sans">-{{ product.discount_percent }}%</span>
+              {% endif %}
+            </div>
+
+            <!-- Add to Cart / View Details -->
+            <div class="card-actions">
+              <button class="btn-card-cart btn-quick-cart" data-product-id="{{ product.id }}">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Add to Cart</span>
+              </button>
+              <a href="{% url 'product_detail' product.slug %}" class="btn-card-cart" style="background:#F3F4F6; color:#2F4F4F; border-color:#E5E7EB; flex:0 0 38px; padding:0;" title="View Product">
+                <i class="fa-regular fa-eye"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div style="text-align: center; margin-top: 10px;">
+    <a href="{% url 'category' 'men' %}" class="btn-primary" style="padding: 14px 36px; font-size: 1rem;">
+      <span>Discover All Collections</span>
+      <i class="fa-solid fa-arrow-right-long"></i>
+    </a>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Offer Section (Animated Prototype Match)
+     ========================================================================== -->
+<section class="container">
+  <div class="offer-showcase-section">
+    <div class="section-title-wrap" style="margin-bottom: 24px;">
+      <h2 style="color: #FFFFFF; font-size: 2.2rem; margin-bottom: 6px;">Exclusive Limited-Time Deals</h2>
+      <p style="color: rgba(255,255,255,0.8); font-size: 0.95rem;">Experience master craftsmanship with unbeatable savings today.</p>
+    </div>
+
+    <!-- Interactive Offer Tabs with Animation -->
+    <div class="offer-tabs">
+      {% for banner in offer_banners %}
+        <button class="offer-tab-btn {% if forloop.first %}active{% endif %}" data-tab="{{ forloop.counter0 }}">
+          <i class="fa-solid fa-tag"></i> {{ banner.badge }} - {{ banner.title|truncatechars:22 }}
+        </button>
+      {% endfor %}
+    </div>
+
+    <!-- Animated Offer Displays -->
+    {% for banner in offer_banners %}
+      <div class="offer-display-card {% if forloop.first %}active{% endif %}" id="offer-card-{{ forloop.counter0 }}">
+        <div class="offer-img-box">
+          <img src="{% static 'images/' %}{{ banner.image }}" alt="{{ banner.title }}">
+        </div>
+        <div class="offer-info-box">
+          <span class="slide-tag" style="background: #FFA0A0; color: #2F4F4F;">{{ banner.tag }}</span>
+          <h3>{{ banner.title }}</h3>
+          <p class="offer-highlight">{{ banner.subtitle }}</p>
+          <p>
+            Immerse yourself in precision-stitched elegance. Designed to support every contour of your foot, our handcrafted shoes guarantee supreme comfort from dawn till dusk.
+          </p>
+
+          <div class="coupon-box">
+            <span>Use Coupon Code:</span>
+            <span class="coupon-code">STEPUP50</span>
+            <button onclick="navigator.clipboard.writeText('STEPUP50'); alert('Coupon STEPUP50 copied to clipboard!');" style="background:none; border:none; color:#FFF; cursor:pointer;" title="Copy Code">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+
+          <div>
+            <a href="{{ banner.link }}" class="btn-accent" style="padding: 14px 32px; font-size: 1rem;">
+              <span>Claim Discount Now</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Trust & Value Proposition Badges
+     ========================================================================== -->
+<section class="container" style="margin: 60px auto;">
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center;">
+    <div style="background: #FFFFFF; padding: 28px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(255,160,160,0.2); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.4rem;">
+        <i class="fa-solid fa-truck-fast"></i>
+      </div>
+      <h4 style="font-size: 1.1rem; margin-bottom: 6px; color: var(--primary);">Free Express Delivery</h4>
+      <p style="font-size: 0.84rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">Complimentary express shipping across India on orders above ₹999.</p>
+    </div>
+
+    <div style="background: #FFFFFF; padding: 28px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(255,160,160,0.2); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.4rem;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h4 style="font-size: 1.1rem; margin-bottom: 6px; color: var(--primary);">Razorpay Secure Checkout</h4>
+      <p style="font-size: 0.84rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">Bank-grade 256-bit encryption for credit, debit, UPI & wallets.</p>
+    </div>
+
+    <div style="background: #FFFFFF; padding: 28px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(255,160,160,0.2); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.4rem;">
+        <i class="fa-solid fa-arrow-rotate-left"></i>
+      </div>
+      <h4 style="font-size: 1.1rem; margin-bottom: 6px; color: var(--primary);">30-Day Hassle-Free Returns</h4>
+      <p style="font-size: 0.84rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">Try them on at home. Return or exchange without questions asked.</p>
+    </div>
+
+    <div style="background: #FFFFFF; padding: 28px 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(255,160,160,0.2); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.4rem;">
+        <i class="fa-solid fa-award"></i>
+      </div>
+      <h4 style="font-size: 1.1rem; margin-bottom: 6px; color: var(--primary);">100% Handcrafted Leather</h4>
+      <p style="font-size: 0.84rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">Authentic top-grain leather sculpted by traditional master shoemakers.</p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}Account Access | StepUp Footwear{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 40px auto 80px;">
+  <div class="auth-wrapper">
+    <!-- Header Logo & Title -->
+    <div style="text-align: center; padding: 32px 24px 20px; background: #FFF;">
+      <a href="{% url 'home' %}" style="display: inline-flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <img src="{% static 'images/IMG_20250530_190436_075.jpg' %}" alt="StepUp" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #FFA0A0; padding: 2px;">
+        <span style="font-size: 1.6rem; font-weight: 700; color: var(--primary);">Step<span style="color: #FFA0A0;">Up</span></span>
+      </a>
+      <p style="font-size: 0.88rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">
+        Welcome to StepUp Footwear. Access your bespoke orders & preferences.
+      </p>
+    </div>
+
+    <!-- Tabs: Sign In / Register -->
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab-btn active" id="tab-login-btn">Sign In</button>
+      <button type="button" class="auth-tab-btn" id="tab-register-btn">Register</button>
+    </div>
+
+    <!-- Body -->
+    <div class="auth-card-body">
+      <!-- Login Form -->
+      <form action="{% url 'login' %}?next={{ next|default:'home' }}" method="POST" id="login-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="login">
+
+        <div class="font-sans" style="margin-bottom: 18px;">
+          <label class="form-label" for="login-username">Username or Email *</label>
+          <input type="text" id="login-username" name="username" required class="form-control" placeholder="Enter username (e.g. admin)">
+        </div>
+
+        <div class="font-sans" style="margin-bottom: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label class="form-label" for="login-password" style="margin-bottom:0;">Password *</label>
+            <a href="javascript:void(0)" onclick="alert('Password reset link has been dispatched to your registered email.');" style="font-size: 0.8rem; color: var(--primary); text-decoration: underline;">Forgot Password?</a>
+          </div>
+          <input type="password" id="login-password" name="password" required class="form-control" placeholder="Enter password (e.g. admin123)">
+        </div>
+
+        <div class="font-sans" style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px; font-size: 0.86rem; color: var(--text-muted);">
+          <input type="checkbox" id="remember-me" style="accent-color: var(--primary);">
+          <label for="remember-me">Remember my session</label>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 13px; font-size: 1rem;">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          <span>Sign In to StepUp</span>
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form action="{% url 'login' %}?next={{ next|default:'home' }}" method="POST" id="register-form" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="register">
+
+        <div class="font-sans" style="margin-bottom: 16px;">
+          <label class="form-label" for="reg-username">Choose Username *</label>
+          <input type="text" id="reg-username" name="username" required class="form-control" placeholder="e.g. sneakerlover">
+        </div>
+
+        <div class="font-sans" style="margin-bottom: 16px;">
+          <label class="form-label" for="reg-email">Email Address *</label>
+          <input type="email" id="reg-email" name="email" required class="form-control" placeholder="you@example.com">
+        </div>
+
+        <div class="font-sans" style="margin-bottom: 16px;">
+          <label class="form-label" for="reg-password">Create Password *</label>
+          <input type="password" id="reg-password" name="password" required class="form-control" placeholder="At least 8 characters">
+        </div>
+
+        <div class="font-sans" style="margin-bottom: 24px;">
+          <label class="form-label" for="reg-confirm">Confirm Password *</label>
+          <input type="password" id="reg-confirm" name="password_confirm" required class="form-control" placeholder="Re-enter password">
+        </div>
+
+        <button type="submit" class="btn-accent" style="width: 100%; justify-content: center; padding: 13px; font-size: 1rem;">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Create My Account</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const tabLogin = document.getElementById('tab-login-btn');
+  const tabRegister = document.getElementById('tab-register-btn');
+  const formLogin = document.getElementById('login-form');
+  const formRegister = document.getElementById('register-form');
+
+  tabLogin.addEventListener('click', function() {
+    tabLogin.classList.add('active');
+    tabRegister.classList.remove('active');
+    formLogin.style.display = 'block';
+    formRegister.style.display = 'none';
+  });
+
+  tabRegister.addEventListener('click', function() {
+    tabRegister.classList.add('active');
+    tabLogin.classList.remove('active');
+    formLogin.style.display = 'none';
+    formRegister.style.display = 'block';
+  });
+</script>
+{% endblock %}

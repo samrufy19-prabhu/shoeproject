@@ -1,0 +1,117 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }}'s Footwear Collection | StepUp{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 28px auto 60px;">
+  <!-- Breadcrumb -->
+  <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif;">
+    <a href="{% url 'home' %}" style="color: var(--primary);">Home</a> &gt;
+    <span style="color: var(--text-dark); font-weight: 600;">{{ category.name }}'s Footwear</span>
+  </div>
+
+  <!-- Category Banner Header -->
+  <div style="background: linear-gradient(135deg, #2F4F4F 0%, #1E3535 100%); color: #FFF; padding: 40px; border-radius: var(--radius-lg); margin-bottom: 36px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+    <div style="max-width: 600px;">
+      <span style="display:inline-block; background: #FFA0A0; color: #2F4F4F; font-size: 0.78rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; margin-bottom: 12px; text-transform: uppercase;">
+        StepUp {{ category.name }}'s Series
+      </span>
+      <h1 style="color: #FFF; font-size: 2.4rem; margin-bottom: 10px;">{{ category.name }}'s Footwear Collection</h1>
+      <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">
+        {{ category.description }}
+      </p>
+    </div>
+    <div style="width: 140px; height: 140px; border-radius: 50%; overflow: hidden; border: 3px solid #FFA0A0; box-shadow: var(--shadow-lg);">
+      <img src="{% static 'images/' %}{{ category.image }}" alt="{{ category.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+  </div>
+
+  <!-- Filter & Sort Bar -->
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; background: #FFF; padding: 16px 24px; border-radius: var(--radius-md); border: 1px solid var(--border-color); flex-wrap: wrap; gap: 16px;">
+    <div style="font-size: 0.92rem; color: var(--text-muted); font-family: 'Plus Jakarta Sans', sans-serif;">
+      Showing <strong style="color: var(--primary);">{{ products|length }}</strong> shoes in {{ category.name }}
+      {% if query %}for "<em>{{ query }}</em>"{% endif %}
+    </div>
+
+    <!-- Sort Dropdown -->
+    <form method="GET" style="display: flex; align-items: center; gap: 10px;">
+      {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+      <label for="sort-select" style="font-size: 0.86rem; font-weight: 600; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif;">Sort By:</label>
+      <select id="sort-select" name="sort" onchange="this.form.submit()" style="padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); font-size: 0.88rem; outline: none; background: #FFF; color: var(--text-dark);">
+        <option value="" {% if not current_sort %}selected{% endif %}>Featured & Newest</option>
+        <option value="price_low" {% if current_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+        <option value="price_high" {% if current_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+        <option value="rating" {% if current_sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+      </select>
+    </form>
+  </div>
+
+  <!-- Products Grid -->
+  {% if products %}
+    <div class="products-grid">
+      {% for product in products %}
+        <div class="product-card">
+          {% if product.offer_badge %}
+            <span class="product-badge">{{ product.offer_badge }}</span>
+          {% elif product.discount_percent > 0 %}
+            <span class="product-badge">{{ product.discount_percent }}% OFF</span>
+          {% endif %}
+
+          <a href="{% url 'product_detail' product.slug %}" class="product-img-wrap">
+            <img src="{% static 'images/' %}{{ product.image }}" alt="{{ product.name }}" class="product-img" loading="lazy">
+          </a>
+
+          <div class="product-info">
+            <div>
+              <span class="product-category-name">{{ product.category.name }}</span>
+              <h3 class="product-title">
+                <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+              </h3>
+
+              <!-- Rating Stars -->
+              <div class="rating-stars font-sans">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star-half-stroke"></i>
+                <span class="reviews-count">({{ product.reviews_count }})</span>
+              </div>
+            </div>
+
+            <div>
+              <!-- Pricing -->
+              <div class="product-pricing font-sans">
+                <span class="price-current">₹{{ product.price|floatformat:0 }}</span>
+                {% if product.original_price %}
+                  <span class="price-original">₹{{ product.original_price|floatformat:0 }}</span>
+                  <span class="price-discount font-sans">-{{ product.discount_percent }}%</span>
+                {% endif %}
+              </div>
+
+              <!-- Add to Cart / View Details -->
+              <div class="card-actions">
+                <button class="btn-card-cart btn-quick-cart" data-product-id="{{ product.id }}">
+                  <i class="fa-solid fa-cart-plus"></i>
+                  <span>Add to Cart</span>
+                </button>
+                <a href="{% url 'product_detail' product.slug %}" class="btn-card-cart" style="background:#F3F4F6; color:#2F4F4F; border-color:#E5E7EB; flex:0 0 38px; padding:0;" title="View Product">
+                  <i class="fa-regular fa-eye"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div style="text-align: center; padding: 60px 20px; background: #FFF; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+      <i class="fa-solid fa-shoe-prints" style="font-size: 3rem; color: var(--accent); margin-bottom: 16px;"></i>
+      <h3 style="font-size: 1.6rem; color: var(--primary); margin-bottom: 10px;">No shoes found</h3>
+      <p style="color: var(--text-muted); margin-bottom: 24px;">We couldn't find any shoes matching your search criteria.</p>
+      <a href="{% url 'category' category.slug %}" class="btn-primary">View All {{ category.name }}'s Shoes</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
